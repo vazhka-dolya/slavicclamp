@@ -1,7 +1,7 @@
 import os, ffmpeg
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-AppVersion = "1.0.0"
+AppVersion = "1.1.0"
 AppEdition = "py38"
 
 os.environ['path'] = "ffmpeg/"
@@ -91,7 +91,19 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             self.LineInput.setText(InputPath[0])
     
     def ChooseOutputPath(self, MainWindow):
-        OutputPath = QtWidgets.QFileDialog.getSaveFileName(self, "Choose where to save, and what name & extension to use", os.getcwd(), "Any file (*)")
+        ChooseOutputPathAppearAt = os.getcwd()
+        if not os.path.isdir(self.RemoveAfterLastSlash(self, self.LineInput.text())):
+            pass
+        else:
+            ChooseOutputPathAppearAt = self.RemoveAfterLastSlash(self, self.LineInput.text())
+            
+        ChooseOutputPathCurrentFormat = ""
+        if not os.path.isfile(self.LineInput.text()):
+            ChooseOutputPathChooseFormat = "MP4 file (*.mp4);;WMV file (*.wmv);;AVI file (*.avi);;Specify other format (*)".format()
+        else:
+            ChooseOutputPathChooseFormat = "Current file format (*.{});;MP4 file (*.mp4);;WMV file (*.wmv);;AVI file (*.avi);;Specify other format (*)".format(self.FindFormat(self, self.LineInput.text()))
+        
+        OutputPath = QtWidgets.QFileDialog.getSaveFileName(self, "Choose where to save, and what name & format/extension to use", ChooseOutputPathAppearAt, ChooseOutputPathChooseFormat)
         if OutputPath[0] == "":
             return
         else:
@@ -119,6 +131,14 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             return String[:String.rfind('/')]
         else:
             return String
+    
+    def FindFormat(self, MainWindow, FilePath):
+        Parts = FilePath.rsplit('.', 1)
+        if len(Parts) > 1:
+            return Parts[-1]
+        else:
+            return ''
+
     
     def AboutWindow(self, MainWindow):
         msgbox = QtWidgets.QMessageBox()
