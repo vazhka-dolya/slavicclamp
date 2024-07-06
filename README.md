@@ -3,7 +3,7 @@ Small & simple program for compressing videos, nothing much.\
 Just insert the path to the video that you want to compress, then insert the path and name & extension you want the result to have, write the desired size in megabytes, and click Compress.\
 DO NOT ask about the name.
 
-# <img src="https://github.com/vazhka-dolya/slavicclamp/blob/main/img/screenshot1_2.png?raw=true">
+# <img src="https://github.com/vazhka-dolya/slavicclamp/blob/main/img/screenshot1_3.png?raw=true">
 
 # FFmpeg
 SlavicClamp uses FFmpeg for compression.\
@@ -17,6 +17,6 @@ If, however, you're using the source, then you need to manually create a folder 
 - - I may not respond to any issues since again, I made this just for myself and I am content with what I have already.
 
 # Credits
-- Some person on Stack Overflow — code for actually compressing the video
-- FFmpeg — used for compression
-- SMO14O7 — came up with the name for this program
+- Some person on Stack Overflow – code for actually compressing the video.
+- FFmpeg – used for compression.
+- SMO14O7 – came up with the name for this program.
