@@ -3,7 +3,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import webbrowser
 from datetime import datetime
 
-AppVersion = "1.2.0"
+AppVersion = "1.3.0"
 AppEdition = "py38"
 
 os.environ['path'] = "ffmpeg/"
@@ -47,7 +47,8 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.LabelNewSize.setGeometry(QtCore.QRect(55, 129, 151, 21))
         self.LabelNewSize.setObjectName("LabelNewSize")
         self.LineNewSize = QtWidgets.QLineEdit(self.centralwidget)
-        self.LineNewSize.setGeometry(QtCore.QRect(10, 130, 41, 20))
+        self.LineNewSize.setGeometry(QtCore.QRect(10, 130, 44, 20))
+        self.LineNewSize.setAlignment(QtCore.Qt.AlignCenter)
         self.LineNewSize.setObjectName("LineNewSize")
         self.ButtonCompress = QtWidgets.QPushButton(self.centralwidget)
         self.ButtonCompress.setGeometry(QtCore.QRect(9, 160, 223, 41))
@@ -95,8 +96,8 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "SlavicClamp {}".format(AppVersion)))
         self.LabelInput.setText(_translate("MainWindow", "Input path:"))
         self.ButtonChooseInput.setText(_translate("MainWindow", "..."))
-        self.LabelCurrentSize.setText(_translate("MainWindow", "(original file size will show up here)"))
-        self.LabelNewSize.setText(_translate("MainWindow", " - new file size (in megabytes)"))
+        self.LabelCurrentSize.setText(_translate("MainWindow", "Original file size will show up here."))
+        self.LabelNewSize.setText(_translate("MainWindow", " – new file size (in megabytes)."))
         self.ButtonCompress.setText(_translate("MainWindow", " Compress"))
         self.LabelOutput.setText(_translate("MainWindow", "Output path:"))
         self.ButtonChooseOutput.setText(_translate("MainWindow", "..."))
@@ -130,9 +131,9 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
     
     def SeeInputSize(self, MainWindow):
         if os.path.isfile(self.LineInput.text()):
-            self.LabelCurrentSize.setText("{} MB - current file size".format(str(round(os.stat(self.LineInput.text()).st_size / 1048576, 2))))
+            self.LabelCurrentSize.setText("{} MB – current file size.".format(str(round(os.stat(self.LineInput.text()).st_size / 1048576, 2))))
         else:
-            self.LabelCurrentSize.setText("(original file size will show up here)")
+            self.LabelCurrentSize.setText("Original file size will show up here.")
     
     def EnableButtons(self, MainWindow, Boolean):
         if (Boolean == True) or (Boolean == False):
@@ -143,7 +144,8 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             self.ButtonChooseOutput.setEnabled(Boolean)
             self.ButtonCompress.setEnabled(Boolean)
         else:
-            print("Incorrect argument for EnableButtons used: \"{}\"".format(Boolean))
+            #print("Incorrect argument for EnableButtons used: \"{}\"".format(Boolean))
+            pass
     
     def RemoveAfterLastSlash(self, MainWindow, String):
         if String.rfind('/') != -1:
@@ -160,13 +162,13 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
 
     
     def AboutWindow(self, MainWindow):
-        msgbox = QtWidgets.QMessageBox()
-        msgbox.setWindowTitle("About")
-        msgbox.setText("SlavicClamp\nVersion: {}\nEdition: {}\nWritten by vazhka-dolya on GitHub\nLicensed under the Do What The Fuck You Want To Public License\n\nCredits:\n- Some person on Stack Overflow — code for actually compressing the video\n- FFmpeg — used for compression\n- SMO14O7 — name for the program".format(AppVersion, AppEdition))
-        msgbox.setStandardButtons(QtWidgets.QMessageBox.Ok)
-        msgbox.setIconPixmap(QtGui.QPixmap("img/icon.png"))
-        msgbox.setWindowIcon(QtGui.QIcon("img/info.png"))
-        runmsgbox = msgbox.exec_()
+        msgboxabo = QtWidgets.QMessageBox()
+        msgboxabo.setWindowTitle("About")
+        msgboxabo.setText("SlavicClamp\nVersion: {}\nEdition: {}\nWritten by vazhka-dolya on GitHub\nLicensed under the Do What The Fuck You Want To Public License\n\nCredits:\n• Some person on Stack Overflow – code for actually compressing the video.\n• FFmpeg – used for compression.\n• @SMO14O7 – name for the program.".format(AppVersion, AppEdition))
+        msgboxabo.setStandardButtons(QtWidgets.QMessageBox.Ok)
+        msgboxabo.setIconPixmap(QtGui.QPixmap("img/icon.png"))
+        msgboxabo.setWindowIcon(QtGui.QIcon("img/info.png"))
+        runmsgboxabo = msgboxabo.exec_()
     
     def OpenGitHubPage(self, MainWindow):
         webbrowser.open("https://github.com/vazhka-dolya/slavicclamp")
@@ -192,23 +194,26 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             ErrorText += ("Error with LineNewSize\n")
             Errors += 1
         if Errors > 0:
-            msgbox = QtWidgets.QMessageBox()
-            msgbox.setWindowTitle("Error!")
-            msgbox.setText(ErrorText)
-            msgbox.setStandardButtons(QtWidgets.QMessageBox.Ok)
-            msgbox.setIcon(QtWidgets.QMessageBox.Critical)
-            msgbox.setWindowIcon(QtGui.QIcon("img/icon.png"))
-            runmsgbox = msgbox.exec_()
+            msgboxerr = QtWidgets.QMessageBox()
+            msgboxerr.setWindowTitle("Error!")
+            msgboxerr.setText(ErrorText)
+            msgboxerr.setStandardButtons(QtWidgets.QMessageBox.Ok)
+            msgboxerr.setIcon(QtWidgets.QMessageBox.Critical)
+            msgboxerr.setWindowIcon(QtGui.QIcon("img/icon.png"))
+            runmsgboxerr = msgboxerr.exec_()
             self.LineInput.setText("")
             self.LineOutput.setText("")
             self.LineNewSize.setText("")
             self.EnableButtons(self, True)
             return
         self.compress_video(self, self.LineInput.text(), self.LineOutput.text(), float(self.LineNewSize.text()) * 1000)
+        global msgbox
         msgbox = QtWidgets.QMessageBox()
         msgbox.setWindowTitle("Finished")
-        msgbox.setText("The video has been successfully compressed.\nPath to video: {}".format(self.LineOutput.text()))
-        msgbox.setStandardButtons(QtWidgets.QMessageBox.Ok)
+        msgbox.setText("The video has been successfully compressed and exported to: {}\nDo you want to see it in the file manager?".format(self.LineOutput.text()))
+        msgbox.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+        msgbox.setDefaultButton(QtWidgets.QMessageBox.Yes)
+        msgbox.buttonClicked.connect(self.LocateFile)
         msgbox.setIcon(QtWidgets.QMessageBox.Information)
         msgbox.setWindowIcon(QtGui.QIcon("img/icon.png"))
         runmsgbox = msgbox.exec_()
@@ -245,6 +250,14 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         ffmpeg.output(i, output_file_name,
                     **{'c:v': 'libx264', 'b:v': video_bitrate, 'pass': 2, 'c:a': 'aac', 'b:a': audio_bitrate}
                     ).overwrite_output().run()
+    
+    def LocateFile(self):
+        global msgbox
+        if msgbox.clickedButton().text() == "&Yes":
+            os.startfile(self.RemoveAfterLastSlash(self, self.LineInput.text()))
+        else:
+            pass
+
 
 if __name__ == "__main__":
     import sys
